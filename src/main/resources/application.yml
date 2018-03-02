@@ -1,0 +1,42 @@
+debug: false
+server:
+  port: 7083
+spring:
+  aop:
+    auto: true
+    proxy-target-class: true
+  application:
+    name: log-transformer-web
+  datasource:
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    driverClassName: com.mysql.jdbc.Driver
+    filters: stat,wall,log4j
+    initialSize: 5
+    maxActive: 20
+    maxPoolPreparedStatementPerConnectionSize: 20
+    maxWait: 60000
+    minEvictableIdleTimeMillis: 300000
+    minIdle: 5
+    poolPreparedStatements: true
+    testOnBorrow: false
+    testOnReturn: false
+    testWhileIdle: true
+    timeBetweenEvictionRunsMillis: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/chocolatedisco?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+    validationQuery: SELECT 1 FROM DUAL
+  jpa:
+    database: MYSQL
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
