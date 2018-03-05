@@ -12,21 +12,24 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/chocolatedisco?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mysql://127.0.0.1:3306/chocolatedisco?useUnicode=true&characterEncoding=utf-8
     username: root
     password: 123456
   aop:
     auto: true
     proxy-target-class: true
   redis:
-    host: 127.0.0.1
+    host: 192.40.10.11
     port: 6379
 eureka:
   instance:
-      hostname: localhost
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    status-page-url-path: /application/info
+    health-check-url-path: /application/health
   client:
     service-url:
-      defaultZone: http://localhost:10080/eureka/
+      defaultZone: http://127.0.0.1:10080/eureka/
 endpoints:
   health:
     id: health
