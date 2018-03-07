@@ -1,6 +1,5 @@
 package net.xicp.chocolatedisco.logtransformerweb.cotroller;
 
-import com.alibaba.fastjson.JSONObject;
 import io.thekraken.grok.api.Grok;
 import io.thekraken.grok.api.Match;
 import io.thekraken.grok.api.exception.GrokException;
@@ -93,15 +92,15 @@ public class DeviceTypeController extends BaseController {
     }
 
     @GetMapping("/deviceTypes/transform")
-    public List<JSONObject> transform(@RequestParam String log, @RequestParam Long deviceTypeId) {
+    public List transform(@RequestParam String log, @RequestParam Long deviceTypeId) {
         Set<String> templates = deviceTypeRepository.findById(deviceTypeId)
                 .map(deviceType -> deviceType.getDeviceTemplates())
                 .map(deviceTemplates -> deviceTemplates.stream().map(deviceTemplate -> deviceTemplate.getTemplate()).collect(Collectors.toSet()))
-                .orElse(new HashSet<>());
+                .orElse(new HashSet());
         Set<DeviceValue> values = deviceTypeRepository.findById(deviceTypeId)
                 .map(deviceType -> deviceType.getDeviceValues())
-                .orElse(new HashSet<>());
-        List<JSONObject> results = new LinkedList<>();
+                .orElse(new HashSet());
+        List results = new LinkedList();
         templates.stream().anyMatch(template -> {
             try {
                 Grok grok = Grok.create(this.getClass().getClassLoader().getResource("grokpatterns").getPath(), template);
@@ -109,12 +108,12 @@ public class DeviceTypeController extends BaseController {
                 Match gm = grok.match(log);
                 gm.captures();
                 if (gm.toMap().size() != 0) {
-                    JSONObject result = new JSONObject(gm.toMap());
+                    Map<String, Object> result = gm.toMap();
                     values.stream().forEach(value -> {
                         String field = value.getField();
                         String raw = value.getRaw();
                         String store = value.getStore();
-                        String real = result.getString(field);
+                        String real = String.valueOf(result.get(field));
                         if (real != null && real.equals(raw)) {
                             result.put(field, store);
                         }
